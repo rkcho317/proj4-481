@@ -28,6 +28,16 @@ class PerceptronModel(object):
         """
         "*** YOUR CODE HERE ***"
 
+# =============================================================================
+#         Implement the run(self, x) method. 
+#         This should compute the dot product of the stored weight vector and the given input,
+#         returning an nn.DotProduct object.
+# =============================================================================
+        
+        #output = nn.DotProduct(self.get_weights(), x)
+        #print(output)
+        return nn.DotProduct(self.get_weights(), x)
+
     def get_prediction(self, x):
         """
         Calculates the predicted class for a single data point `x`.
@@ -35,12 +45,55 @@ class PerceptronModel(object):
         Returns: 1 or -1
         """
         "*** YOUR CODE HERE ***"
+        
+# =============================================================================
+#         Implement get_prediction(self, x), 
+#         which should return 1 if the dot product is non-negative or −1 otherwise.
+#         You should use nn.as_scalar to convert a scalar Node into a Python floating-point number.
+# =============================================================================
+        
+        output = self.run(x)
+        #print(output)
+        output = nn.as_scalar(output)
+        #print(output)
+        if output < 0.0:
+            return -1
+        else:
+            return 1
 
     def train(self, dataset):
         """
         Train the perceptron until convergence.
         """
         "*** YOUR CODE HERE ***"
+        
+# =============================================================================
+#         Write the train(self) method. 
+#         This should repeatedly loop over the data set and 
+#         make updates on examples that are misclassified. 
+#         Use the update method of the nn.Parameter class to update the weights. 
+#         When an entire pass over the data set is completed without making any mistakes,
+#         100% training accuracy has been achieved, and training can terminate.
+# =============================================================================
+
+        weight_set = self.get_weights()
+        learning_rate = 0.25
+        
+        
+        #if t=a, do nothing
+        while ( nn.as_scalar(dataset) != nn.as_scalar(weight_set) ):
+            #else error, adjust weight vector for next case by 
+            #   w^n+1 = w^n + delta w^n
+            #weight adjustment, or delta w^n can be defined:
+            #   delta w^n = l (t - a) x sub i
+            #       where l is the learning rate between 0 and 1 controlling speed of convergence
+            #       t is the desired output value (class label) from the training set
+            #       a is the perceptron output value (either +/-1) for
+            #       x sub i, the current input case
+            t = 
+            
+            weight_adjustment = learning_rate * 
+            
 
 class RegressionModel(object):
     """

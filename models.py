@@ -52,14 +52,15 @@ class PerceptronModel(object):
 #         You should use nn.as_scalar to convert a scalar Node into a Python floating-point number.
 # =============================================================================
         
+        #this would run if the input were not already a single-item node
         output = self.run(x)
         #print(output)
         output = nn.as_scalar(output)
         #print(output)
         if output < 0.0:
-            return -1
+            return -1.0
         else:
-            return 1
+            return 1.0
 
     def train(self, dataset):
         """
@@ -77,35 +78,34 @@ class PerceptronModel(object):
 # =============================================================================
 
         weight_set = self.get_weights()
-        learning_rate = 0.25
-        print("weights")
+        learning_rate = 0.2
+        """print("weights")
         print(weight_set)
         print(weight_set.data)
         print(weight_set.data[0])
         for item in weight_set.data[0]:
             print(item)
         
-        print("dataset")
+        print("dataset")"""
         
         batch_size = 1
-        for x,y in dataset.iterate_once(batch_size):
+        """for x,y in dataset.iterate_once(batch_size):
             print(x)
             print(x.data)
             for item in x.data[0]:
                 print(item)
             print(y)
             print(y.data)
-            break
+            break"""
         
-        print("dot product")
+        """print("dot product")
         delW = nn.DotProduct(weight_set, x)
         print(delW)
-        print(delW.data)
+        print(delW.data)"""
         
         print("iterate thru dataset")
         
         #if t=a, do nothing
-#        while ( nn.as_scalar(dataset) != nn.as_scalar(weight_set) ):
             #else error, adjust weight vector for next case by 
             #   w^n+1 = w^n + delta w^n
             #weight adjustment, or delta w^n can be defined:
@@ -115,28 +115,58 @@ class PerceptronModel(object):
             #       a is the perceptron output value (either +/-1) for
             #       x sub i, the current input case
         
-        # iterate through dataset once
-        for x,y in dataset.iterate_once(batch_size):
-            #the net is the sum of (each weight * matching data point)
-            effNet = 0
-            #for each pair in weight_set and x.data
-            for index in range( len(x.data[0]) ):
-                #multiply each weight by matching data point, add to net
-                effNet += weight_set.data[0][index] * x.data[0][index]
-                print(effNet)
-            #now that you have the net of the data,
-            #   check to see if predicted value matches the dataset's target
-            #   if it matches, no problem - if mismatch, need delta w
-            if effNet < 0.0:
-                predict = -1.0
-            else:
-                predict = 1.0
-            #if y.data[0][0] != self.get_prediction(nn.DataNode(effNet)):
-            if y.data[0][0] != predict:
-                #how do you get delta w?
-                print("mismatch!")
-                print(effNet, " has predicted output of ", predict)
-                print(y.data[0][0], " from training data")
+        #completed a full loop without any errors
+        notConverged = True
+        while (notConverged):
+            notConverged = True
+            mismatches = False
+            # iterate through dataset once
+            for x,y in dataset.iterate_once(batch_size):
+                #the net is the sum of (each weight * matching data point)
+                """effNet = 0"""
+                #for each pair in weight_sprint(effNet)et and x.data
+                """for index in range( len(x.data[0]) ):
+                    #multiply each weight by matching data point, add to net
+                    effNet += weight_set.data[0][index] * x.data[0][index]
+                    print(effNet)
+                    print(nn.DotProduct(weight_set, x))
+                    print(nn.as_scalar(nn.DotProduct(weight_set, x)))"""
+                #now that you have the net of the data,
+                #   check to see if predicted value matches the dataset's target
+                #   if it matches, no problem - if mismatch, need delta w
+                """if effNet < 0.0:
+                    predict = -1.0
+                else:
+                    predict = 1.0"""
+                #effNet = nn.DotProduct(weight_set, x)
+                #print(effNet)
+                #print(nn.as_scalar(effNet))
+                effNet = self.run(x)
+                #print(effNet)
+                #print(nn.as_scalar(effNet))
+                #if y.data[0][0] != self.get_prediction(nn.DataNode(effNet)):
+                if nn.as_scalar(y) != self.get_prediction(x):
+                    #how do you get delta w?
+                    print("mismatch!")
+                    print("f(net) is ", effNet, " which is ", nn.as_scalar(effNet))
+                    print("x from training data is ", x, " which is ", x.data)
+                    print(x, " has predicted output of ", self.get_prediction(x))
+                    print("y from training data is ", y, " which is ", nn.as_scalar(y))
+                    #now that we actually have shit figured, we change weights now
+                    #deltaW = learning rate * (target - prediction) * current input case
+                    print("before weights: ", self.get_weights())
+                    print("before weights data: ", self.get_weights().data)
+                    deltaW = learning_rate * (nn.as_scalar(y) - self.get_prediction(x))
+                    print("delta w: ", deltaW)
+                    nn.Parameter.update(self.get_weights(), x, deltaW)
+                    print("after weights: ", self.get_weights())
+                    print("after weights data: ", self.get_weights().data)
+                    #weight_set = self.get_weights()
+                    mismatches = True
+                #else:
+                    #print("match! do nothing!")
+            if mismatches == False:
+                notConverged = False
             
 
 class RegressionModel(object):

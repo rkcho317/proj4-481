@@ -120,8 +120,12 @@ class PerceptronModel(object):
         while (notConverged):
             notConverged = True
             mismatches = False
+            print("top of loop")
+            print("mismatch!", mismatches)
+            print("notConverged!", notConverged)
             # iterate through dataset once
             for x,y in dataset.iterate_once(batch_size):
+                print("dataset loop", x, y)
                 #the net is the sum of (each weight * matching data point)
                 """effNet = 0"""
                 #for each pair in weight_sprint(effNet)et and x.data
@@ -147,7 +151,7 @@ class PerceptronModel(object):
                 #if y.data[0][0] != self.get_prediction(nn.DataNode(effNet)):
                 if nn.as_scalar(y) != self.get_prediction(x):
                     #how do you get delta w?
-                    print("mismatch!")
+                    print("mismatch!", mismatches)
                     print("f(net) is ", effNet, " which is ", nn.as_scalar(effNet))
                     print("x from training data is ", x, " which is ", x.data)
                     print(x, " has predicted output of ", self.get_prediction(x))
@@ -163,10 +167,15 @@ class PerceptronModel(object):
                     print("after weights data: ", self.get_weights().data)
                     #weight_set = self.get_weights()
                     mismatches = True
+                    print("mismatch!", mismatches)
                 #else:
                     #print("match! do nothing!")
+            print("end of loop")
+            print("mismatch!", mismatches)
+            print("notConverged!", notConverged)
             if mismatches == False:
                 notConverged = False
+                print("notConverged!", notConverged)
             
 
 class RegressionModel(object):

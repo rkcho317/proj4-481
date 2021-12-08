@@ -73,9 +73,9 @@ class RegressionModel(object):
         self.batch_size = 1
 
         self.a1 = nn.Parameter(0,1)
-        self.a2 = nn.Parameter(1,1)
-        self.a3 = nn.Parameter(-2,2)
-        self.a4 = nn.Parameter(-3,4)
+        self.a2 = nn.Parameter(0,1)
+        self.b1 = nn.Parameter(1,0)
+        self.b2 = nn.Parameter(1,1)
 
 
 
@@ -89,6 +89,12 @@ class RegressionModel(object):
             A node with shape (batch_size x 1) containing predicted y-values
         """
         "*** YOUR CODE HERE ***"
+
+        x_linear = nn.Linear(x, self.a1)
+        x_relu = nn.ReLu(nn.AddBias(x_linear,self.a2))
+        x_linear2 = nn.Linear(x_relu, self.a1)
+
+        return nn.AddBias(x_linear2, self.b1) 
 
     def get_loss(self, x, y):
         """

@@ -50,15 +50,39 @@ class PerceptronModel(object):
         Train the perceptron until convergence.
         """
         "*** YOUR CODE HERE ***"
-        y = self.get_weights()
+        weight_set = self.get_weights()
         learning_rate = 0.25
 
-        while(nn.as_scalar(dataset) != nn.as_scalar(y)):
-            for x,y in nn.as_scalar(dataset):
-                if nn.as_scalar(y) != self.get_prediction(x):
-                    nn.Parameter.update(self.w,x,nn.as_scalar(y))
-            if nn.as_scalar(dataset) == nn.as_scalar(y):
-                break 
+      #  while(nn.as_scalar(dataset) != nn.as_scalar(y)):
+      #      for x,y in nn.as_scalar(dataset):
+      #          if nn.as_scalar(y) != self.get_prediction(x):
+      #              nn.Parameter.update(self.w,x,nn.as_scalar(y))
+      #      if nn.as_scalar(dataset) == nn.as_scalar(y):
+      #          break 
+
+      # iterate through dataset once
+        for x,y in dataset.iterate_once(self.batch_size):
+            #the net is the sum of (each weight * matching data point)
+            effNet = 0
+            #for each pair in weight_set and x.data
+            for index in range( len(x.data[0]) ):
+                #multiply each weight by matching data point, add to net
+                effNet += weight_set.data[0][index] * x.data[0][index]
+                print(effNet)
+
+            #now that you have the net of the data,
+            #   check to see if predicted value matches the dataset's target
+            #   if it matches, no problem - if mismatch, need delta w
+            if effNet < 0.0:
+                predict = -1.0
+            else:
+                predict = 1.0
+            #if y.data[0][0] != self.get_prediction(nn.DataNode(effNet)):
+            if y.data[0][0] != predict:
+                #how do you get delta w?
+                print("mismatch!")
+                print(effNet, " has predicted output of ", predict)
+                print(y.data[0][0], " from training data")
 
 
 class RegressionModel(object):
@@ -108,8 +132,6 @@ class RegressionModel(object):
         """
         "*** YOUR CODE HERE ***"
         loss_node = nn.SquareLoss(self.run(x),y)
-
-
         return loss_node
 
     def train(self, dataset):
@@ -117,6 +139,13 @@ class RegressionModel(object):
         Trains the model.
         """
         "*** YOUR CODE HERE ***"
+
+        while ():
+            
+
+        return
+            
+
 
 class DigitClassificationModel(object):
     """

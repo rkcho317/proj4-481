@@ -78,10 +78,34 @@ class PerceptronModel(object):
 
         weight_set = self.get_weights()
         learning_rate = 0.25
+        print("weights")
+        print(weight_set)
+        print(weight_set.data)
+        print(weight_set.data[0])
+        for item in weight_set.data[0]:
+            print(item)
         
+        print("dataset")
+        
+        batch_size = 1
+        for x,y in dataset.iterate_once(batch_size):
+            print(x)
+            print(x.data)
+            for item in x.data[0]:
+                print(item)
+            print(y)
+            print(y.data)
+            break
+        
+        print("dot product")
+        delW = nn.DotProduct(weight_set, x)
+        print(delW)
+        print(delW.data)
+        
+        print("iterate thru dataset")
         
         #if t=a, do nothing
-        while ( nn.as_scalar(dataset) != nn.as_scalar(weight_set) ):
+#        while ( nn.as_scalar(dataset) != nn.as_scalar(weight_set) ):
             #else error, adjust weight vector for next case by 
             #   w^n+1 = w^n + delta w^n
             #weight adjustment, or delta w^n can be defined:
@@ -90,9 +114,29 @@ class PerceptronModel(object):
             #       t is the desired output value (class label) from the training set
             #       a is the perceptron output value (either +/-1) for
             #       x sub i, the current input case
-            t = 
-            
-            weight_adjustment = learning_rate * 
+        
+        # iterate through dataset once
+        for x,y in dataset.iterate_once(batch_size):
+            #the net is the sum of (each weight * matching data point)
+            effNet = 0
+            #for each pair in weight_set and x.data
+            for index in range( len(x.data[0]) ):
+                #multiply each weight by matching data point, add to net
+                effNet += weight_set.data[0][index] * x.data[0][index]
+                print(effNet)
+            #now that you have the net of the data,
+            #   check to see if predicted value matches the dataset's target
+            #   if it matches, no problem - if mismatch, need delta w
+            if effNet < 0.0:
+                predict = -1.0
+            else:
+                predict = 1.0
+            #if y.data[0][0] != self.get_prediction(nn.DataNode(effNet)):
+            if y.data[0][0] != predict:
+                #how do you get delta w?
+                print("mismatch!")
+                print(effNet, " has predicted output of ", predict)
+                print(y.data[0][0], " from training data")
             
 
 class RegressionModel(object):

@@ -69,13 +69,14 @@ class PerceptronModel(object):
                     notConverged = False
 
                     #deltaW = learning rate * (target - prediction) * current input case
-                    deltaW = learning_rate * (nn.as_scalar(y) - self.get_prediction(x)) * effNet
+                    #deltaW = learning_rate * (nn.as_scalar(y) - self.get_prediction(x)) * effNet
                   
                    #can't do that all at once, so instead we get just 
                     #   "learning rate * (target - prediction)" but!
                     #   we feed that into update() 
                     #   self.data += multiplier * direction.data
-                    nn.Parameter.update(self.get_weights(), x, deltaW)
+                   # nn.Parameter.update(self.get_weights(), x, deltaW)
+                    nn.Parameter.update(self.w,x,nn.as_scalar(y))
 
            # if mismatches == False:
             if notConverged:

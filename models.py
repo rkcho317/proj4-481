@@ -59,27 +59,24 @@ class PerceptronModel(object):
         while (True):
             notConverged = True
            # mismatches = False
-            # iterate through dataset once per while loop
             for x,y in dataset.iterate_once(batch_size):
                 
                 # for current i, this gets the sum of w(i) * x(i)
                 effNet = self.run(x)
                 
-                # if t = a, do nothing, otherwise adjust weight vector
                # if (nn.as_scalar(y) - self.get_prediction(x)) != 0.0:
                 if (nn.as_scalar(y) != self.get_prediction(x) ):
                     notConverged = False
+
                     #deltaW = learning rate * (target - prediction) * current input case
-                    deltaW = learning_rate * (nn.as_scalar(y) - self.get_prediction(x))
-                    #can't do that all at once, so instead we get just 
+                    deltaW = learning_rate * (nn.as_scalar(y) - self.get_prediction(x)) * effNet
+                  
+                   #can't do that all at once, so instead we get just 
                     #   "learning rate * (target - prediction)" but!
                     #   we feed that into update() 
                     #   self.data += multiplier * direction.data
                     nn.Parameter.update(self.get_weights(), x, deltaW)
 
-                  #  mismatches = True
-                #else:
-                    #print("match! do nothing!")
            # if mismatches == False:
             if notConverged:
                 print("final weights: ", self.get_weights(), self.get_weights().data)

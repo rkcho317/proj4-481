@@ -1,0 +1,8 @@
+        while(True):
+           conv = True
+           for x,y in dataset.iterate_once(1):
+                if nn.as_scalar(y) != self.get_prediction(x):
+                    conv = False
+                    nn.Parameter.update(self.w,x,nn.as_scalar(y))
+           if conv:
+                break 

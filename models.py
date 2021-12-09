@@ -51,7 +51,7 @@ class PerceptronModel(object):
         Train the perceptron until convergence.
         """
         "*** YOUR CODE HERE ***"
-        weight_set = self.get_weights()
+      #  weight_set = self.get_weights()
         learning_rate = 0.3
         batch_size = 1
         

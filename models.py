@@ -77,8 +77,7 @@ class PerceptronModel(object):
 #         100% training accuracy has been achieved, and training can terminate.
 # =============================================================================
 
-        weight_set = self.get_weights()
-        learning_rate = 0.3
+        learning_rate = 0.2
         batch_size = 1
         
         notConverged = True
@@ -89,7 +88,7 @@ class PerceptronModel(object):
             for x,y in dataset.iterate_once(batch_size):
                 
                 # for current i, this gets the sum of w(i) * x(i)
-                effNet = self.run(x)
+                # f(net) = self.get_prediction(x)
                 
                 # if t = a, do nothing, otherwise adjust weight vector
                 if (nn.as_scalar(y) - self.get_prediction(x)) != 0.0:
@@ -100,7 +99,7 @@ class PerceptronModel(object):
                     #   "learning rate * (target - prediction)" but!
                     #   we feed that into update() 
                     #   self.data += multiplier * direction.data
-                    nn.Parameter.update(self.get_weights(), x, deltaW)
+                    nn.Parameter.update(self.w, x, deltaW)
 
                     mismatches = True
                 #else:

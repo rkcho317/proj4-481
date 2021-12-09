@@ -1,5 +1,6 @@
 import nn
 
+#python autograder.py -q q1
 class PerceptronModel(object):
     def __init__(self, dimensions):
         """
@@ -51,40 +52,38 @@ class PerceptronModel(object):
         """
         "*** YOUR CODE HERE ***"
         weight_set = self.get_weights()
-        learning_rate = 0.25
+        learning_rate = 0.3
+        batch_size = 1
+        
+       # notConverged = True
+        while (True):
+            notConverged = True
+           # mismatches = False
+            # iterate through dataset once per while loop
+            for x,y in dataset.iterate_once(batch_size):
+                
+                # for current i, this gets the sum of w(i) * x(i)
+                effNet = self.run(x)
+                
+                # if t = a, do nothing, otherwise adjust weight vector
+               # if (nn.as_scalar(y) - self.get_prediction(x)) != 0.0:
+                if (nn.as_scalar(y) != self.get_prediction(x) ):
+                    notConverged = False
+                    #deltaW = learning rate * (target - prediction) * current input case
+                    deltaW = learning_rate * (nn.as_scalar(y) - self.get_prediction(x))
+                    #can't do that all at once, so instead we get just 
+                    #   "learning rate * (target - prediction)" but!
+                    #   we feed that into update() 
+                    #   self.data += multiplier * direction.data
+                    nn.Parameter.update(self.get_weights(), x, deltaW)
 
-      #  while(nn.as_scalar(dataset) != nn.as_scalar(y)):
-      #      for x,y in nn.as_scalar(dataset):
-      #          if nn.as_scalar(y) != self.get_prediction(x):
-      #              nn.Parameter.update(self.w,x,nn.as_scalar(y))
-      #      if nn.as_scalar(dataset) == nn.as_scalar(y):
-      #          break 
-
-      # iterate through dataset once
-        for x,y in dataset.iterate_once(self.batch_size):
-            #the net is the sum of (each weight * matching data point)
-            effNet = 0
-            #for each pair in weight_set and x.data
-            for index in range( len(x.data[0]) ):
-                #multiply each weight by matching data point, add to net
-                effNet += weight_set.data[0][index] * x.data[0][index]
-                print(effNet)
-
-            #now that you have the net of the data,
-            #   check to see if predicted value matches the dataset's target
-            #   if it matches, no problem - if mismatch, need delta w
-            if effNet < 0.0:
-                predict = -1.0
-            else:
-                predict = 1.0
-            #if y.data[0][0] != self.get_prediction(nn.DataNode(effNet)):
-            if y.data[0][0] != predict:
-                #how do you get delta w?
-                print("mismatch!")
-                print(effNet, " has predicted output of ", predict)
-                print(y.data[0][0], " from training data")
-
-
+                  #  mismatches = True
+                #else:
+                    #print("match! do nothing!")
+           # if mismatches == False:
+            if notConverged:
+                print("final weights: ", self.get_weights(), self.get_weights().data)
+                break
 class RegressionModel(object):
     """
     A neural network model for approximating a function that maps from real
@@ -140,10 +139,7 @@ class RegressionModel(object):
         """
         "*** YOUR CODE HERE ***"
 
-        while ():
-            
-
-        return
+      
             
 
 
